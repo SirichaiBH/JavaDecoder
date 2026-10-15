@@ -70,7 +70,7 @@ public class DecoderFrame extends JFrame {
         addStageButton(sidebar, "Binary to Decimal");
         sidebar.add(Box.createVerticalStrut(28));
 
-        addStageButton(sidebar, "Hexadecimal to Decimal");
+        addStageButton(sidebar, "Hexcimal to Decimal");
         sidebar.add(Box.createVerticalStrut(28));
 
         addStageButton(sidebar, "Morse Code");
@@ -83,12 +83,8 @@ public class DecoderFrame extends JFrame {
         return sidebar;
     }
 
-    private void addStageButton(
-            JPanel sidebar, String stageName
-    ) {
-        RoundedButton button = new RoundedButton(
-                stageName, 16
-        );
+    private void addStageButton(JPanel sidebar, String stageName) {
+        RoundedButton button = new RoundedButton(stageName, 16);
 
         button.setFont(new Font(
                 "SansSerif", Font.PLAIN, 19

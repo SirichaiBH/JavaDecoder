@@ -7,6 +7,7 @@ package decoder.core;
 
 import decoder.stage.DecoderStage;
 import decoder.stage.BinaryToDecimalStage;
+import decoder.stage.HexcimalToDecimalStage;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class StageManager {
 
     public StageManager() {
         registerStage(new BinaryToDecimalStage());
+        registerStage(new HexcimalToDecimalStage());
     }
 
     public void registerStage(DecoderStage stage) {
