@@ -13,8 +13,7 @@ import java.util.Map;
 
 public class StageManager {
 
-    private final Map<String, DecoderStage> stages =
-            new LinkedHashMap<>();
+    private final Map<String, DecoderStage> stages = new LinkedHashMap<>();
 
     public StageManager() {
         registerStage(new BinaryToDecimalStage());

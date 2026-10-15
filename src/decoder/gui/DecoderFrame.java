@@ -1,10 +1,11 @@
-
 package decoder.gui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import decoder.core.StageManager;
+import javax.swing.JOptionPane;
 
 public class DecoderFrame extends JFrame {
 
@@ -21,6 +22,7 @@ public class DecoderFrame extends JFrame {
     private JButton btnClear;
 
     private String selectedStage = "Binary to Decimal";
+    private final StageManager stageManager = new StageManager();
 
     public DecoderFrame() {
         setTitle("Java Decoder");
@@ -30,6 +32,7 @@ public class DecoderFrame extends JFrame {
         setLocationRelativeTo(null);
 
         setContentPane(createMainLayout());
+
     }
 
     private JPanel createMainLayout() {
@@ -46,11 +49,11 @@ public class DecoderFrame extends JFrame {
     // LEFT SIDEBAR
     private JPanel createSidebar() {
         RoundedPanel sidebar = new RoundedPanel(
-            Color.WHITE, 32
+                Color.WHITE, 32
         );
 
         sidebar.setLayout(new BoxLayout(
-            sidebar, BoxLayout.Y_AXIS
+                sidebar, BoxLayout.Y_AXIS
         ));
 
         sidebar.setPreferredSize(new Dimension(290, 0));
@@ -81,21 +84,21 @@ public class DecoderFrame extends JFrame {
     }
 
     private void addStageButton(
-        JPanel sidebar, String stageName
+            JPanel sidebar, String stageName
     ) {
         RoundedButton button = new RoundedButton(
-            stageName, 16
+                stageName, 16
         );
 
         button.setFont(new Font(
-            "SansSerif", Font.PLAIN, 19
+                "SansSerif", Font.PLAIN, 19
         ));
 
         button.setForeground(TEXT);
         button.setBackground(Color.WHITE);
         button.setPreferredSize(new Dimension(242, 64));
         button.setMaximumSize(
-            new Dimension(Integer.MAX_VALUE, 64)
+                new Dimension(Integer.MAX_VALUE, 64)
         );
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -133,7 +136,7 @@ public class DecoderFrame extends JFrame {
 
     private JPanel createEditorPanel() {
         RoundedPanel editor = new RoundedPanel(
-            Color.WHITE, 42
+                Color.WHITE, 42
         );
 
         editor.setLayout(new GridBagLayout());
@@ -168,16 +171,17 @@ public class DecoderFrame extends JFrame {
         // EXECUTE BUTTON
         btnExecute = new RoundedButton("Execute", 30);
         btnExecute.setFont(new Font(
-            "SansSerif", Font.BOLD, 24
+                "SansSerif", Font.BOLD, 24
         ));
         btnExecute.setForeground(Color.WHITE);
         btnExecute.setBackground(PURPLE);
         btnExecute.setBorderPainted(false);
+        btnExecute.addActionListener(e -> executeDecoder());
 
         // CLEAR BUTTON
         btnClear = new RoundedButton("Clear", 30);
         btnClear.setFont(new Font(
-            "SansSerif", Font.PLAIN, 24
+                "SansSerif", Font.PLAIN, 24
         ));
         btnClear.setForeground(TEXT);
         btnClear.setBackground(Color.WHITE);
@@ -203,7 +207,7 @@ public class DecoderFrame extends JFrame {
         txtResult = new JTextArea();
         txtResult.setEditable(false);
         txtResult.setFont(new Font(
-            "Monospaced", Font.PLAIN, 18
+                "Monospaced", Font.PLAIN, 18
         ));
         txtResult.setLineWrap(true);
         txtResult.setWrapStyleWord(true);
@@ -219,11 +223,11 @@ public class DecoderFrame extends JFrame {
         // ERROR MESSAGE
         lblError = new JLabel(" ");
         lblError.setFont(new Font(
-            "SansSerif", Font.PLAIN, 20
+                "SansSerif", Font.PLAIN, 20
         ));
         lblError.setForeground(ERROR);
         lblError.setHorizontalAlignment(
-            SwingConstants.CENTER
+                SwingConstants.CENTER
         );
 
         gbc.gridy = 5;
@@ -236,16 +240,37 @@ public class DecoderFrame extends JFrame {
             txtInput.setText("");
             txtResult.setText("");
             lblError.setText(" ");
-        });
 
-        btnExecute.addActionListener(e -> {
-            // Decoder logic will be implemented later.
-            lblError.setText(
-                "Decoder logic has not been implemented yet."
-            );
         });
-
         return editor;
+    }
+
+    private void executeDecoder() {
+        String input = txtInput.getText().trim();
+
+        if (input.isEmpty()) {
+            lblError.setText("Please enter an input value.");
+            txtResult.setText("");
+            return;
+        }
+
+        try {
+            String result = stageManager.execute(
+                    selectedStage,
+                    input
+            );
+
+            txtResult.setText(result);
+            lblError.setText(" ");
+
+        } catch (NumberFormatException ex) {
+            txtResult.setText("");
+            lblError.setText("Invalid input for " + selectedStage);
+
+        } catch (IllegalArgumentException ex) {
+            txtResult.setText("");
+            lblError.setText(ex.getMessage());
+        }
     }
 
     private JLabel createLabel(String text) {
@@ -256,15 +281,15 @@ public class DecoderFrame extends JFrame {
     }
 
     private JPanel createTextBox(
-        JTextArea area, int radius
+            JTextArea area, int radius
     ) {
         RoundedPanel box = new RoundedPanel(
-            Color.WHITE, radius
+                Color.WHITE, radius
         );
 
         box.setLayout(new BorderLayout());
         box.setBorder(BorderFactory.createLineBorder(
-            new Color(25, 25, 25), 2, true
+                new Color(25, 25, 25), 2, true
         ));
 
         box.add(area, BorderLayout.CENTER);
@@ -288,14 +313,14 @@ public class DecoderFrame extends JFrame {
             Graphics2D g2 = (Graphics2D) g.create();
 
             g2.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
             );
 
             g2.setColor(backgroundColor);
             g2.fillRoundRect(
-                0, 0, getWidth(), getHeight(),
-                radius, radius
+                    0, 0, getWidth(), getHeight(),
+                    radius, radius
             );
 
             g2.dispose();
@@ -331,8 +356,8 @@ public class DecoderFrame extends JFrame {
             Graphics2D g2 = (Graphics2D) g.create();
 
             g2.setRenderingHint(
-                RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON
             );
 
             Color fill = getBackground();
@@ -347,15 +372,15 @@ public class DecoderFrame extends JFrame {
 
             g2.setColor(fill);
             g2.fillRoundRect(
-                0, 0, getWidth() - 1, getHeight() - 1,
-                radius, radius
+                    0, 0, getWidth() - 1, getHeight() - 1,
+                    radius, radius
             );
 
             g2.setColor(new Color(30, 30, 30));
             g2.setStroke(new BasicStroke(1.2f));
             g2.drawRoundRect(
-                0, 0, getWidth() - 1, getHeight() - 1,
-                radius, radius
+                    0, 0, getWidth() - 1, getHeight() - 1,
+                    radius, radius
             );
 
             g2.dispose();
@@ -363,4 +388,3 @@ public class DecoderFrame extends JFrame {
         }
     }
 }
-    
