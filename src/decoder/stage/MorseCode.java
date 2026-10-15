@@ -1,6 +1,57 @@
 
 package decoder.stage;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class MorseCode implements DecoderStage {
+
+    private static final Map<String, Character> MORSE_MAP
+            = createMorseMap();
+
+    private static Map<String, Character> createMorseMap() {
+        Map<String, Character> map = new HashMap<>();
+
+        map.put(".-", 'a');
+        map.put("-...", 'b');
+        map.put("-.-.", 'c');
+        map.put("-..", 'd');
+        map.put(".", 'e');
+        map.put("..-.", 'f');
+        map.put("--.", 'g');
+        map.put("....", 'h');
+        map.put("..", 'i');
+        map.put(".---", 'j');
+        map.put("-.-", 'k');
+        map.put(".-..", 'l');
+        map.put("--", 'm');
+        map.put("-.", 'n');
+        map.put("---", 'o');
+        map.put(".--.", 'p');
+        map.put("--.-", 'q');
+        map.put(".-.", 'r');
+        map.put("...", 's');
+        map.put("-", 't');
+        map.put("..-", 'u');
+        map.put("...-", 'v');
+        map.put(".--", 'w');
+        map.put("-..-", 'x');
+        map.put("-.--", 'y');
+        map.put("--..", 'z');
+
+        map.put(".----", '1');
+        map.put("..---", '2');
+        map.put("...--", '3');
+        map.put("....-", '4');
+        map.put(".....", '5');
+        map.put("-....", '6');
+        map.put("--...", '7');
+        map.put("---..", '8');
+        map.put("----.", '9');
+        map.put("-----", '0');
+
+        return Map.copyOf(map);
+    }
 
     @Override
     public String getName() {
@@ -9,32 +60,21 @@ public class MorseCode implements DecoderStage {
 
     @Override
     public String process(String input) {
+        if (input == null || input.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Please enter Morse code."
+            );
+        }
 
-        char[] letter = {
-            'a', 'b', 'c', 'd', 'e', 'f',
-            'g', 'h', 'i', 'j', 'k', 'l',
-            'm', 'n', 'o', 'p', 'q', 'r',
-            's', 't', 'u', 'v', 'w', 'x',
-            'y', 'z', '1', '2', '3', '4',
-            '5', '6', '7', '8', '9', '0'
-        };
-
-        String[] code = {
-            ".-", "-...", "-.-.", "-..", ".",
-            "..-.", "--.", "....", "..", ".---",
-            "-.-", ".-..", "--", "-.", "---",
-            ".--.", "--.-", ".-.", "...", "-",
-            "..-", "...-", ".--", "-..-", "-.--",
-            "--..", ".----", "..---", "...--", "....-",
-            ".....", "-....", "--...", "---..", "----.", "-----"
-        };
-
+        String[] words = input.trim().split("\\s*/\\s*");
         StringBuilder output = new StringBuilder();
 
-        // / ใช้คั่นระหว่างคำ
-        String[] words = input.trim().split("\\s*/\\s*");
-
         for (int w = 0; w < words.length; w++) {
+            if (words[w].isBlank()) {
+                throw new IllegalArgumentException(
+                        "Empty word found in Morse code."
+                );
+            }
 
             if (w > 0) {
                 output.append(" ");
@@ -43,14 +83,15 @@ public class MorseCode implements DecoderStage {
             String[] symbols = words[w].trim().split("\\s+");
 
             for (String symbol : symbols) {
+                Character letter = MORSE_MAP.get(symbol);
 
-                for (int j = 0; j < code.length; j++) {
-
-                    if (code[j].equals(symbol)) {
-                        output.append(letter[j]);
-                        break;
-                    }
+                if (letter == null) {
+                    throw new IllegalArgumentException(
+                            "Invalid Morse code: " + symbol
+                    );
                 }
+
+                output.append(letter);
             }
         }
 
