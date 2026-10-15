@@ -160,17 +160,19 @@ public class DecoderFrame extends JFrame {
 
         // INPUT AREA
         txtInput = new JTextArea();
-        txtInput.setFont(new Font("Monospaced", Font.PLAIN, 18));
         txtInput.setLineWrap(true);
         txtInput.setWrapStyleWord(true);
         txtInput.setOpaque(false);
         txtInput.setBorder(new EmptyBorder(15, 18, 15, 18));
+        JScrollPane inputScroll = new JScrollPane(txtInput);
+        inputScroll.setBorder(null);
+        inputScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         gbc.gridy = 1;
         gbc.weighty = 0.35;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 26, 0);
-        editor.add(createTextBox(txtInput, 30), gbc);
+        editor.add(createTextBox(inputScroll, 30), gbc);
 
         // EXECUTE BUTTON
         btnExecute = new RoundedButton("Execute", 30);
@@ -229,8 +231,12 @@ public class DecoderFrame extends JFrame {
         txtResult.setBorder(new EmptyBorder(15, 18, 15, 18));
         txtResult.setBackground(Color.WHITE);
 
+        JScrollPane resultScroll = new JScrollPane(txtResult);
+        resultScroll.setBorder(null);
+        resultScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
 // กล่องผลลัพธ์พร้อมเส้นขอบ
-        JPanel resultBox = createTextBox(txtResult, 30);
+        JPanel resultBox = createTextBox(resultScroll, 30);
 
 // จัดวาง Header และ Result Box
         resultPanel.add(resultHeader, BorderLayout.NORTH);
@@ -260,10 +266,9 @@ public class DecoderFrame extends JFrame {
         editor.add(lblError, gbc);
 
         btnClear.addActionListener(e -> {
-            txtInput.setText("");
-            txtResult.setText("");
-            lblError.setText(" ");
-
+        txtInput.setText("");
+        txtResult.setText("");
+        showStatus(" ", "normal");
         });
         return editor;
     }
@@ -272,8 +277,8 @@ public class DecoderFrame extends JFrame {
         String input = txtInput.getText().trim();
 
         if (input.isEmpty()) {
-            lblError.setText("Please enter an input value.");
             txtResult.setText("");
+            showStatus("Please enter an input value.", "error");
             return;
         }
 
@@ -284,15 +289,15 @@ public class DecoderFrame extends JFrame {
             );
 
             txtResult.setText(result);
-            lblError.setText(" ");
+            showStatus(" ", "normal");
 
         } catch (NumberFormatException ex) {
             txtResult.setText("");
-            lblError.setText("Invalid input for " + selectedStage);
+            showStatus("Invalid input for " + selectedStage, "error");
 
         } catch (IllegalArgumentException ex) {
             txtResult.setText("");
-            lblError.setText(ex.getMessage());
+            showStatus(ex.getMessage(), "error");
         }
     }
 
@@ -303,19 +308,15 @@ public class DecoderFrame extends JFrame {
         return label;
     }
 
-    private JPanel createTextBox(
-            JTextArea area, int radius
-    ) {
-        RoundedPanel box = new RoundedPanel(
-                Color.WHITE, radius
-        );
+    private JPanel createTextBox(JComponent component, int radius) {
+        RoundedPanel box = new RoundedPanel(Color.WHITE, radius);
 
         box.setLayout(new BorderLayout());
         box.setBorder(BorderFactory.createLineBorder(
                 new Color(25, 25, 25), 2, true
         ));
 
-        box.add(area, BorderLayout.CENTER);
+        box.add(component, BorderLayout.CENTER);
         return box;
     }
 
@@ -347,7 +348,6 @@ public class DecoderFrame extends JFrame {
             );
 
             g2.dispose();
-            super.paintComponent(g);
         }
     }
 
@@ -414,19 +414,40 @@ public class DecoderFrame extends JFrame {
     private void copyResult() {
         String result = txtResult.getText();
 
-        if (result == null || result.isEmpty()) {
-            lblError.setText("No result to copy.");
+        if (result == null || result.trim().isEmpty()) {
+            showStatus("No result to copy.", "error");
             return;
         }
 
-        java.awt.datatransfer.StringSelection selection
-                = new java.awt.datatransfer.StringSelection(result);
+        try {
+            java.awt.datatransfer.StringSelection selection
+                    = new java.awt.datatransfer.StringSelection(result);
 
-        java.awt.datatransfer.Clipboard clipboard
-                = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+            java.awt.datatransfer.Clipboard clipboard
+                    = java.awt.Toolkit.getDefaultToolkit()
+                            .getSystemClipboard();
 
-        clipboard.setContents(selection, null);
+            clipboard.setContents(selection, null);
 
-        lblError.setText("Copied to clipboard!");
+            showStatus("Copied to clipboard!", "success");
+
+        } catch (Exception ex) {
+            showStatus("Unable to copy result.", "error");
+        }
+    }
+
+    private void showStatus(String message, String type) {
+        lblError.setText(message);
+
+        switch (type) {
+            case "success" ->
+                lblError.setForeground(new Color(22, 163, 74));
+
+            case "error" ->
+                lblError.setForeground(new Color(220, 38, 38));
+
+            default ->
+                lblError.setForeground(MUTED);
+        }
     }
 }
