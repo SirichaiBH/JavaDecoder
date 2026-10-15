@@ -7,6 +7,13 @@ import javax.swing.border.EmptyBorder;
 import decoder.core.StageManager;
 import javax.swing.JOptionPane;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 public class DecoderFrame extends JFrame {
 
     private final Color PURPLE = new Color(98, 24, 238);
@@ -20,6 +27,7 @@ public class DecoderFrame extends JFrame {
 
     private JButton btnExecute;
     private JButton btnClear;
+    private JButton btnCopy;
 
     private String selectedStage = "Binary to Decimal";
     private final StageManager stageManager = new StageManager();
@@ -193,28 +201,47 @@ public class DecoderFrame extends JFrame {
         gbc.insets = new Insets(0, 0, 28, 0);
         editor.add(buttons, gbc);
 
-        // RESULT LABEL
-        gbc.gridy = 3;
-        gbc.weighty = 0;
-        gbc.insets = new Insets(0, 8, 10, 0);
-        editor.add(createLabel("Result"), gbc);
+// RESULT HEADER
+        JPanel resultPanel = new JPanel(new BorderLayout(0, 8));
+        resultPanel.setOpaque(false);
 
-        // RESULT AREA
+// ชื่อ Result ด้านซ้าย
+        JLabel lblResultTitle = createLabel("Result");
+
+// ปุ่ม Copy ด้านขวา
+        btnCopy = new JButton("Copy");
+        btnCopy.setFocusPainted(false);
+        btnCopy.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnCopy.setPreferredSize(new Dimension(70, 30));
+        btnCopy.addActionListener(e -> copyResult());
+
+        JPanel resultHeader = new JPanel(new BorderLayout());
+        resultHeader.setOpaque(false);
+        resultHeader.add(lblResultTitle, BorderLayout.WEST);
+        resultHeader.add(btnCopy, BorderLayout.EAST);
+
+// สร้างพื้นที่แสดงผลลัพธ์
         txtResult = new JTextArea();
-        txtResult.setEditable(false);
-        txtResult.setFont(new Font(
-                "Monospaced", Font.PLAIN, 18
-        ));
+        txtResult.setFont(new Font("Monospaced", Font.PLAIN, 18));
         txtResult.setLineWrap(true);
         txtResult.setWrapStyleWord(true);
-        txtResult.setOpaque(false);
+        txtResult.setEditable(false);
         txtResult.setBorder(new EmptyBorder(15, 18, 15, 18));
+        txtResult.setBackground(Color.WHITE);
 
-        gbc.gridy = 4;
-        gbc.weighty = 0.35;
+// กล่องผลลัพธ์พร้อมเส้นขอบ
+        JPanel resultBox = createTextBox(txtResult, 30);
+
+// จัดวาง Header และ Result Box
+        resultPanel.add(resultHeader, BorderLayout.NORTH);
+        resultPanel.add(resultBox, BorderLayout.CENTER);
+
+// เพิ่ม Result Panel ลงใน Editor
+        gbc.gridy = 3;
+        gbc.weighty = 0.65;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.insets = new Insets(0, 0, 18, 0);
-        editor.add(createTextBox(txtResult, 30), gbc);
+        gbc.insets = new Insets(0, 0, 20, 0);
+        editor.add(resultPanel, gbc);
 
         // ERROR MESSAGE
         lblError = new JLabel(" ");
@@ -382,5 +409,24 @@ public class DecoderFrame extends JFrame {
             g2.dispose();
             super.paintComponent(g);
         }
+    }
+
+    private void copyResult() {
+        String result = txtResult.getText();
+
+        if (result == null || result.isEmpty()) {
+            lblError.setText("No result to copy.");
+            return;
+        }
+
+        java.awt.datatransfer.StringSelection selection
+                = new java.awt.datatransfer.StringSelection(result);
+
+        java.awt.datatransfer.Clipboard clipboard
+                = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+
+        clipboard.setContents(selection, null);
+
+        lblError.setText("Copied to clipboard!");
     }
 }

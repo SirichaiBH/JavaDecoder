@@ -8,6 +8,7 @@ package decoder.core;
 import decoder.stage.DecoderStage;
 import decoder.stage.BinaryToDecimalStage;
 import decoder.stage.HexcimalToDecimalStage;
+import decoder.stage.MorseCode;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,6 +20,8 @@ public class StageManager {
     public StageManager() {
         registerStage(new BinaryToDecimalStage());
         registerStage(new HexcimalToDecimalStage());
+        registerStage(new MorseCode());
+        
     }
 
     public void registerStage(DecoderStage stage) {
