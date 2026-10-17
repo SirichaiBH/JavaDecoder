@@ -8,11 +8,11 @@ package decoder.stage;
  *
  * @author Sirichai Bhunshoo
  */
-public class HexcimalToDecimalStage implements DecoderStage {
+public class HexadecimalToDecimalStage implements DecoderStage {
 
     @Override
     public String getName() {
-        return "Hexcimal to Decimal"; // same binary
+        return "Hexadecimal to Decimal"; // same binary
     }
 
     @Override

@@ -79,7 +79,7 @@ public class DecoderFrame extends JFrame {
         addStageButton(sidebar, "Binary to Decimal");
         sidebar.add(Box.createVerticalStrut(28));
 
-        addStageButton(sidebar, "Hexcimal to Decimal");
+        addStageButton(sidebar, "Hexadecimal to Decimal");
         sidebar.add(Box.createVerticalStrut(28));
 
         addStageButton(sidebar, "Morse Code");
