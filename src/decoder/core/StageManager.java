@@ -17,7 +17,7 @@ public class StageManager {
 
     private final Map<String, DecoderStage> stages = new LinkedHashMap<>();
 
-    public StageManager() {
+    public StageManager() {  //add method
         registerStage(new BinaryToDecimalStage());
         registerStage(new HexcimalToDecimalStage());
         registerStage(new MorseCode());

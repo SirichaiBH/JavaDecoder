@@ -14,13 +14,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+//GUI thanks so much Chat gpt 
 public class DecoderFrame extends JFrame {
-
+//gui 1 ui color
     private final Color PURPLE = new Color(98, 24, 238);
     private final Color TEXT = new Color(25, 25, 30);
     private final Color MUTED = new Color(125, 125, 135);
     private final Color ERROR = new Color(255, 55, 65);
-
+//gui 2 gui matiral
     private JTextArea txtInput;
     private JTextArea txtResult;
     private JLabel lblError;
@@ -28,10 +29,10 @@ public class DecoderFrame extends JFrame {
     private JButton btnExecute;
     private JButton btnClear;
     private JButton btnCopy;
-
+// get state and state manager
     private String selectedStage = "Binary to Decimal";
     private final StageManager stageManager = new StageManager();
-
+//gui name size and position
     public DecoderFrame() {
         setTitle("Java Decoder");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,7 +43,7 @@ public class DecoderFrame extends JFrame {
         setContentPane(createMainLayout());
 
     }
-
+// main layout
     private JPanel createMainLayout() {
         JPanel root = new JPanel(new BorderLayout(24, 0));
         root.setBackground(new Color(248, 248, 250));
@@ -54,7 +55,7 @@ public class DecoderFrame extends JFrame {
         return root;
     }
 
-    // LEFT SIDEBAR
+// slidebar for select state
     private JPanel createSidebar() {
         RoundedPanel sidebar = new RoundedPanel(
                 Color.WHITE, 32
@@ -90,7 +91,7 @@ public class DecoderFrame extends JFrame {
 
         return sidebar;
     }
-
+// creat button 
     private void addStageButton(JPanel sidebar, String stageName) {
         RoundedButton button = new RoundedButton(stageName, 16);
 
@@ -105,7 +106,7 @@ public class DecoderFrame extends JFrame {
                 new Dimension(Integer.MAX_VALUE, 64)
         );
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+//select mode of state button 
         button.addActionListener((ActionEvent e) -> {
             selectedStage = stageName;
             lblError.setText(" ");
@@ -117,12 +118,12 @@ public class DecoderFrame extends JFrame {
                     b.setSelected(stageName.equals(b.getText()));
                 }
             }
-        });
+        }); //----
 
         sidebar.add(button);
     }
 
-    // RIGHT WORKSPACE
+//decode window
     private JPanel createWorkspace() {
         JPanel workspace = new JPanel(new BorderLayout(0, 28));
         workspace.setOpaque(false);
@@ -137,7 +138,7 @@ public class DecoderFrame extends JFrame {
 
         return workspace;
     }
-
+//creat input resutl button and label
     private JPanel createEditorPanel() {
         RoundedPanel editor = new RoundedPanel(
                 Color.WHITE, 42
@@ -182,7 +183,7 @@ public class DecoderFrame extends JFrame {
         btnExecute.setForeground(Color.WHITE);
         btnExecute.setBackground(PURPLE);
         btnExecute.setBorderPainted(false);
-        btnExecute.addActionListener(e -> executeDecoder());
+        btnExecute.addActionListener(e -> executeDecoder()); //run when click execute button
 
         // CLEAR BUTTON
         btnClear = new RoundedButton("Clear", 30);
@@ -264,7 +265,7 @@ public class DecoderFrame extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 0, 0);
         editor.add(lblError, gbc);
-
+//clear
         btnClear.addActionListener(e -> {
         txtInput.setText("");
         txtResult.setText("");
@@ -272,7 +273,7 @@ public class DecoderFrame extends JFrame {
         });
         return editor;
     }
-
+//check input execute decoder and exceptioin
     private void executeDecoder() {
         String input = txtInput.getText().trim();
 
@@ -300,14 +301,14 @@ public class DecoderFrame extends JFrame {
             showStatus(ex.getMessage(), "error");
         }
     }
-
+//label
     private JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font("SansSerif", Font.PLAIN, 27));
         label.setForeground(TEXT);
         return label;
     }
-
+//some gui
     private JPanel createTextBox(JComponent component, int radius) {
         RoundedPanel box = new RoundedPanel(Color.WHITE, radius);
 
@@ -410,7 +411,7 @@ public class DecoderFrame extends JFrame {
             super.paintComponent(g);
         }
     }
-
+//copy button
     private void copyResult() {
         String result = txtResult.getText();
 
@@ -435,7 +436,7 @@ public class DecoderFrame extends JFrame {
             showStatus("Unable to copy result.", "error");
         }
     }
-
+//status
     private void showStatus(String message, String type) {
         lblError.setText(message);
 

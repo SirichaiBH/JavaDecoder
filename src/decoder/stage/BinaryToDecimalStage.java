@@ -12,13 +12,13 @@ public class BinaryToDecimalStage implements DecoderStage{
 
     @Override
     public String getName() {
-        return "Binary to Decimal";
+        return "Binary to Decimal"; //use for define state
     }
 
     @Override
     public String process(String input) {
-        int number = Integer.parseInt(input, 2);
-        return String.valueOf(number);
+        int number = Integer.parseInt(input, 2); // input some binary with strign and conmvert to int
+        return String.valueOf(number);//return this
     }
     
 }

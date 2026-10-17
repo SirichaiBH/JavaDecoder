@@ -9,6 +9,8 @@ package decoder.stage;
  *
  * @author Sirichai Bhunshoo
  */
+
+// tamplet for more code ..
 public interface DecoderStage {
     String getName();
     String process(String input);

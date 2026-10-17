@@ -12,12 +12,12 @@ public class HexcimalToDecimalStage implements DecoderStage {
 
     @Override
     public String getName() {
-        return "Hexcimal to Decimal";
+        return "Hexcimal to Decimal"; // same binary
     }
 
     @Override
     public String process(String input) {
-        long number = Long.parseLong(input, 16);
+        long number = Long.parseLong(input, 16); //same at binary but convert to long and input with Hex
         return String.valueOf(number);
     }
 }

@@ -6,12 +6,11 @@ import java.util.Map;
 
 public class MorseCode implements DecoderStage {
 
-    private static final Map<String, Character> MORSE_MAP
-            = createMorseMap();
+    private static final Map<String, Character> MORSE_MAP = createMorseMap();//create morsemap
 
     private static Map<String, Character> createMorseMap() {
-        Map<String, Character> map = new HashMap<>();
-
+        Map<String, Character> map = new HashMap<>();  //creat opject map 
+            //morse with key and value Thanks chat gpt
         map.put(".-", 'a');
         map.put("-...", 'b');
         map.put("-.-.", 'c');
@@ -50,23 +49,23 @@ public class MorseCode implements DecoderStage {
         map.put("----.", '9');
         map.put("-----", '0');
 
-        return Map.copyOf(map);
+        return Map.copyOf(map);  //return copy of map but can fix it
     }
 
     @Override
     public String getName() {
-        return "Morse Code";
+        return "Morse Code"; //same at binary
     }
 
     @Override
     public String process(String input) {
-        if (input == null || input.isBlank()) {
+        if (input == null || input.isBlank()) { //alert blank input
             throw new IllegalArgumentException(
                     "Please enter Morse code."
             );
         }
 
-        String[] words = input.trim().split("\\s*/\\s*");
+        String[] words = input.trim().split("\\s*/\\s*"); //split morse code
         StringBuilder output = new StringBuilder();
 
         for (int w = 0; w < words.length; w++) {
